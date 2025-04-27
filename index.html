@@ -28,7 +28,11 @@
 <meta name="twitter:image" content="https://ratemylikes.com/og.png">
 
 <script>
-    document.querySelector('.kit-form')
-      .addEventListener('submit', () => plausible('signup'));
-    </script>
-    
+    // дождёмся полной загрузки DOM, чтобы форма уже была на месте
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('.formkit-form');
+      if (form && window.plausible) {
+        form.addEventListener('submit', () => plausible('signup'));
+      }
+    });
+  </script>
