@@ -1,4 +1,7 @@
 <!-- ===== HERO SECTION ===== -->
+
+<script defer data-domain="ratemylikes.com" src="https://plausible.io/js/script.hash.pageview-props.tagged-events.js"></script>
+
 <h1>How many likes would this outfit get?</h1>
 <p class="sub">
   Snap a full-body photo, and our AI predicts your Instagram score <br>
@@ -24,3 +27,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ratemylikes.com/og.png">
 
+<script>
+    document.querySelector('.kit-form')
+      .addEventListener('submit', () => plausible('signup'));
+    </script>
+    
