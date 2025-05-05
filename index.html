@@ -56,13 +56,16 @@
       background-position:center;
       background-size:contain;
     
-      animation:heart-swap 2.8s ease-in-out infinite;
+      animation:heart-swap 2.8s ease-in-out forwards;
     }
+    .benefits li:nth-child(1)::before{ animation-delay:0s;   }  /* верхний */
+    .benefits li:nth-child(2)::before{ animation-delay:.6s; }  /* средний */
+    .benefits li:nth-child(3)::before{ animation-delay:1.2s;}  /* нижний */
     
     @keyframes heart-swap{
       0%,72%  {background-image:var(--heart-outline);transform:scale(1);}
       75%,82% {background-image:var(--heart-fill);   transform:scale(1.15);}
-      88%,100%{background-image:var(--heart-outline);transform:scale(1);}
+      88%,100%{background-image:var(--heart-fill);    transform:scale(1);}
     }
     
     /* ───────── 4. phone-мокап (прежние стили) ───────── */
@@ -130,9 +133,10 @@
     
       .benefits li{padding-left:0;margin-left:-4px;}
       .benefits li::before{position:relative;left:auto;margin-right:6px;}
-    
       #phone-wrapper{width:100%;max-width:320px;margin:0 auto;position:relative;}
       #phone-wrapper #hero{width:100%;max-width:320px;}
+      #phone-wrapper{ margin-top:-4px; }
+
     
       h1{font-size:26px;}
     }
