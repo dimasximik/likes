@@ -18,105 +18,159 @@
 
   <!-- Styles -->
   <style>
-  /*  ====== GLOBAL & LAYOUT ======  */
-  body{
-    font-family:'Inter',sans-serif;
-    margin:0;padding:0;
-    display:flex;flex-direction:column;min-height:100vh;
-  }
-  .hero{
-  flex:1 0 auto;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:40px 8vw 0;          /* ← вернули 8vw слева-справа */
-  max-width:960px;margin:auto;
-  gap:48px;                    /* расстояние между текстом и телефоном */
+    /* ───────── 1. SVG-иконки как CSS-переменные ───────── */
+    :root{
+      /* контур: чёрная заливка, белый stroke */
+      --heart-outline:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' stroke='%23fff' stroke-width='2' d='M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z'/%3E%3C/svg%3E");
+    
+      /* лайк: полностью красный */
+      --heart-fill:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FF5858' d='M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z'/%3E%3C/svg%3E");
+    }
+    
+    /* ───────── 2. базовые стили ───────── */
+    body{
+      font-family:'Inter',sans-serif;
+      margin:0;padding:0;
+      display:flex;flex-direction:column;min-height:100vh;
+      background:#000;color:#fff;              /* у вас тёмная тема по умолчанию */
+    }
+    
+    .hero{
+      flex:1 0 auto;display:flex;align-items:center;justify-content:space-between;
+      gap:48px;max-width:960px;margin:auto;padding:40px 8vw 0;
+    }
+    .copy{max-width:420px;}
+    h1{margin:0 0 8px;font-size:32px;}
+    
+    /* ───────── 3. список преимуществ ───────── */
+    .benefits{
+      list-style:none;margin:16px 0 24px;padding:0;font-size:16px;line-height:1.5;
+    }
+    .benefits li{position:relative;padding-left:30px;margin-bottom:10px;}
+    
+    .benefits li::before{
+      content:'';width:20px;height:20px;position:absolute;left:2px;top:0;
+      display:inline-block; 
+      background-image:var(--heart-outline);   /* стартовое состояние */
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:contain;
+    
+      animation:heart-swap 2.8s ease-in-out infinite;
+    }
+    
+    @keyframes heart-swap{
+      0%,72%  {background-image:var(--heart-outline);transform:scale(1);}
+      75%,82% {background-image:var(--heart-fill);   transform:scale(1.15);}
+      88%,100%{background-image:var(--heart-outline);transform:scale(1);}
+    }
+    
+    /* ───────── 4. phone-мокап (прежние стили) ───────── */
+    #phone-wrapper{flex:0 0 360px;}
+    #hero{position:relative;width:360px;margin:0 auto;}
+    #hero img{width:100%;display:block;border-radius:20px;}
+    
+    #likes{
+      position:absolute;bottom:20.5%;left:25%;
+      font:700 'Inter',sans-serif;z-index:10;display:inline-block;
+    }
+    #likes::before{
+      content:'';position:absolute;inset:0;background:#fcf7f3;border-radius:4px;z-index:0;
+    }
+    #likes::after{
+      position:relative;z-index:1;color:#000;
+      content:'24 likes';animation:counter 5s linear infinite;
+    }
+    @keyframes counter{
+      0%{content:'48 likes';}30%{content:'120 likes';}70%{content:'350 likes';}100%{content:'48 likes';}
+    }
+    
+    /* ───────── 5. форма / футер ───────── */
+    .signup{flex:0 0 auto;display:flex;justify-content:center;padding:40px 8vw;}
+    .signup .formkit-form{max-width:720px;width:100%;}
+    footer{text-align:center;padding:24px 0 40px;}
+    #share{font-size:15px;color:#0066ff;text-decoration:none;}
+    #share:hover{text-decoration:underline;}
+    
+    /* ───────── 6. мобильный ≤640px ───────── */
+    @media(max-width:640px){
+      .hero{flex-direction:column;text-align:center;gap:16px;padding:24px 16px 0;}
+      .copy h1{ text-align:center; }
+
+/* 2. Сам список теперь левый и «сам себя» центрирует
+      (ширина по контенту, потом margin:auto) */
+/* 1. общий контейнер всё ещё центрирует содержимое */
+.hero { text-align:center; }
+
+/* 2. сам список — ширина по содержимому, браузер его центрирует */
+.copy .benefits{
+  display:inline-block;   /* ← ключевая строка  */
+  text-align:left;        /* внутри — как обычный список */
+  margin:0;               /* можно без margin:auto */
+  padding-left:0;
 }
 
-
-  h1{margin:0 0 8px;font-size:32px;}
-  .sub{margin:0 0 24px;line-height:1.4;}
-
-  /*  ====== PHONE MOCKUP ======  */
-  #phone-wrapper{flex:0 0 360px;}
-  #hero         {position:relative;width:360px;margin:0 auto;}
-  #hero img     {width:100%;display:block;border-radius:20px;}
-
-  #likes{
-  position:absolute;
-  bottom:20.5%;
-  left:25%;
-  font:700 'Inter',sans-serif;
-  z-index:10;
-  display:inline-block;
+/* 3. элементы списка: flex-строка, всё прижато влево */
+.copy .benefits li{
+  display:flex;
+  align-items:center;
+  gap:8px;        /* расстояние сердце ←→ текст */
+  margin:0 0 10px 0;
 }
 
-  #likes::before{
-    content:'';position:absolute;inset:0;background:#fcf7f3;
-    border-radius:4px;z-index:0;
-  }
-  #likes::after{
-    position:relative;z-index:1;color:#000;
-    content:'24 likes';animation:counter 5s linear infinite;
-  }
-  @keyframes counter{
-  0%   {content:'48 likes';}     
-  30%  {content:'120 likes';}    
-  70%  {content:'350 likes';}    
-  100% {content:'48 likes';}
+/* 4. сердечко внутри flex */
+.copy .benefits li::before{
+  position:static;
+  flex:0 0 20px;
+  width:20px;height:20px;
+  display:block;
+  margin:0;
 }
-
-  /*  ====== SIGN-UP SECTION ======  */
-  .signup{flex:0 0 auto;display:flex;justify-content:center;padding:40px 8vw;}
-  .signup .formkit-form{max-width:720px;width:100%;}
-
-  /*  ====== SHARE LINK ======  */
-  footer{text-align:center;padding:24px 0 40px;}
-  #share{font-size:15px;color:#0066ff;text-decoration:none;}
-  #share:hover{text-decoration:underline;}
-
-  /* -------- десктоп / планшет -------- */
-
-
-/* -------- мобильный  -------- */
-@media(max-width:640px){
-  .hero{
-    flex-direction:column;text-align:center;gap:24px;
-    padding:24px 16px 0;       /* ↔ 16 px безопасный отступ */
-  }
-  #phone-wrapper{
-  width:100%;            /* уже */
-  max-width:320px;
-  margin:0 auto;
-  position:relative;     /*   важно: чтобы % считались от контейнера   */
-}
-
-    /* ⬇️ новая часть */
-    #phone-wrapper #hero{
-    width:100%;                 /* вместо фикс. 360 px */
-    max-width:320px;            /* = ширине phone-wrapper */
-  }
-
-  h1{font-size:26px;}
-}
-
-
-  h1{font-size:26px;}
-}
-
-  </style>
+      .benefits{font-size:15px;text-align:center;}
+    
+      .benefits li{padding-left:0;margin-left:-4px;}
+      .benefits li::before{position:relative;left:auto;margin-right:6px;}
+    
+      #phone-wrapper{width:100%;max-width:320px;margin:0 auto;position:relative;}
+      #phone-wrapper #hero{width:100%;max-width:320px;}
+    
+      h1{font-size:26px;}
+    }
+    
+    /* подстраховка, если где-то переопределят размер h1 */
+    h1{font-size:26px;}
+    </style>
+    
+    
 </head>
 <body>
+  <svg aria-hidden="true" style="display:none">
+    <!-- контур: чёрная заливка = «дырка», белый stroke -->
+    <symbol id="heart-outline" viewBox="0 0 24 24">
+      <path fill="#000" stroke="currentColor" stroke-width="2"
+            d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+    </symbol>
+  
+    <!-- заливка красным -->
+    <symbol id="heart-fill" viewBox="0 0 24 24">
+      <path fill="#FF5858"
+            d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+    </symbol>
+  </svg>
+  
 
   <!-- ===== HERO SECTION ===== -->
   <header class="hero">
-    <div>
-      <h1>How many likes would this outfit get?</h1>
-      <p class="sub">
-        Snap a full-body photo, and our AI predicts your Instagram score<br>
-        — plus 3 instant style tweaks to boost it.
-      </p>
+    <div class="copy">          <!-- новый контейнер -->
+      <h1>Upload your outfit — get your AI like count in&nbsp;30 s</h1>
+  
+      <ul class="benefits">
+        <li>Instant Instagram-style score</li>
+        <li>3 quick tips to boost likes</li>
+        <li><strong>5&nbsp;free checks</strong> for early users</li>
+      </ul>
     </div>
-
+  
     <div id="phone-wrapper">
       <div id="hero">
         <img src="phone.webp" alt="Instagram outfit mock-up" loading="lazy">
@@ -133,6 +187,15 @@
 
 
   <!-- Plausible signup event hook -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('.formkit-form');
+      if(form && window.plausible){
+        form.addEventListener('submit', () => plausible('signup'));
+      }
+    });
+  </script>
+
  <!-- ===== SHARE CTA ===== -->
 <!-- <footer>
   <a id="share"
@@ -142,6 +205,23 @@
     Share &amp; Skip the Line →
   </a>
 </footer> -->
+
+<!--  ── HEART SPRITE (outline + fill) ──  -->
+<svg aria-hidden="true" style="display:none">
+  <!-- контур: чёрная заливка = «дырка», белый stroke -->
+  <symbol id="heart-outline" viewBox="0 0 24 24">
+    <path fill="#000" stroke="currentColor" stroke-width="2"
+          d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+  </symbol>
+
+  <!-- заливка красным -->
+  <symbol id="heart-fill" viewBox="0 0 24 24">
+    <path fill="#FF5858"
+          d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938Z"/>
+  </symbol>
+</svg>
+
+
 
 
 </body>
