@@ -163,43 +163,46 @@
     
 </head>
 <script>
-  const rnd = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
-  const tipsPool = [
-    'Tuck the T-shirt to show waistline',
-    'Contrast shoes for pop of colour',
-    'Roll sleeves for cleaner silhouette',
-    'Add belt to break monotone',
-    'Crop jeans 2 cm above ankle'
-  ];
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileInput  = document.getElementById('fileInput');
+    const resultBox  = document.getElementById('result');
+    const likesNumEl = document.getElementById('likesNum');
+    const tipsEl     = document.getElementById('tips');
+    const againBtn   = document.getElementById('againBtn');
   
-  const fileInput  = document.getElementById('fileInput');
-  const resultBox  = document.getElementById('result');
-  const likesNumEl = document.getElementById('likesNum');
-  const tipsEl     = document.getElementById('tips');
-  const againBtn   = document.getElementById('againBtn');
+    if (!fileInput) return;          // если id опечатан – ничего не падает
   
-  fileInput.addEventListener('change', () => {
-    if(!fileInput.files.length) return;
-    // имитация «обработки»
-    setTimeout(()=>showResult(), 800);
-  });
+    fileInput.addEventListener('change', () => {
+      if (!fileInput.files.length) return;
+      setTimeout(showResult, 800);
+    });
   
-  function showResult(){
-    const likes = rnd(40, 400);
-    likesNumEl.textContent = likes;
-    // генерируем 3 разные подсказки
-    tipsEl.innerHTML = [...tipsPool]
-      .sort(()=>0.5-Math.random()).slice(0,3)
-      .map(t=>`<li>${t}</li>`).join('');
-    resultBox.classList.remove('hidden');
-    if(window.plausible) plausible('demo_used', {props:{likes}});
-  }
+    function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+    const tipsPool=[
+      'Tuck the T-shirt to show waistline',
+      'Contrast shoes for pop of colour',
+      'Roll sleeves for cleaner silhouette',
+      'Add belt to break monotone',
+      'Crop jeans 2 cm above ankle'
+    ];
   
-  againBtn.addEventListener('click', ()=>{
-    resultBox.classList.add('hidden');
-    fileInput.value = '';           // сброс
+    function showResult(){
+      const likes = rnd(40,400);
+      likesNumEl.textContent = likes;
+      tipsEl.innerHTML = [...tipsPool]
+        .sort(()=>0.5-Math.random()).slice(0,3)
+        .map(t=>`<li>${t}</li>`).join('');
+      resultBox.classList.remove('hidden');
+      if (window.plausible) plausible('demo_used',{props:{likes}});
+    }
+  
+    againBtn.addEventListener('click',()=>{
+      resultBox.classList.add('hidden');
+      fileInput.value='';
+    });
   });
   </script>
+  
   
 <body>
   <svg aria-hidden="true" style="display:none">
