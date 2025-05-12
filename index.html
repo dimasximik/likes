@@ -140,6 +140,21 @@
     
       h1{font-size:26px;}
     }
+
+    /* ---------- demo block ---------- */
+.demo{flex:0 0 auto;text-align:center;padding:40px 16px}
+.uploader{
+  display:inline-block;padding:18px 28px;
+  background:#FF5858;color:#fff;font-weight:700;
+  border-radius:10px;cursor:pointer;
+}
+#result.hidden{display:none}
+#result h2{margin:24px 0 12px 0;font-size:28px}
+#result ul{list-style:disc;margin:0 auto 24px;padding-left:22px;text-align:left;max-width:260px}
+#againBtn{padding:12px 20px;background:#0066FF;color:#fff;border:none;
+          border-radius:8px;cursor:pointer}
+
+
     
     /* подстраховка, если где-то переопределят размер h1 */
     h1{font-size:26px;}
@@ -147,6 +162,45 @@
     
     
 </head>
+<script>
+  const rnd = (min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+  const tipsPool = [
+    'Tuck the T-shirt to show waistline',
+    'Contrast shoes for pop of colour',
+    'Roll sleeves for cleaner silhouette',
+    'Add belt to break monotone',
+    'Crop jeans 2 cm above ankle'
+  ];
+  
+  const fileInput  = document.getElementById('fileInput');
+  const resultBox  = document.getElementById('result');
+  const likesNumEl = document.getElementById('likesNum');
+  const tipsEl     = document.getElementById('tips');
+  const againBtn   = document.getElementById('againBtn');
+  
+  fileInput.addEventListener('change', () => {
+    if(!fileInput.files.length) return;
+    // имитация «обработки»
+    setTimeout(()=>showResult(), 800);
+  });
+  
+  function showResult(){
+    const likes = rnd(40, 400);
+    likesNumEl.textContent = likes;
+    // генерируем 3 разные подсказки
+    tipsEl.innerHTML = [...tipsPool]
+      .sort(()=>0.5-Math.random()).slice(0,3)
+      .map(t=>`<li>${t}</li>`).join('');
+    resultBox.classList.remove('hidden');
+    if(window.plausible) plausible('demo_used', {props:{likes}});
+  }
+  
+  againBtn.addEventListener('click', ()=>{
+    resultBox.classList.add('hidden');
+    fileInput.value = '';           // сброс
+  });
+  </script>
+  
 <body>
   <svg aria-hidden="true" style="display:none">
     <!-- контур: чёрная заливка = «дырка», белый stroke -->
@@ -182,6 +236,20 @@
       </div>
     </div>
   </header>
+
+  <section id="demo" class="demo">
+    <label class="uploader">
+      <input type="file" accept="image/*" id="fileInput" hidden>
+      <span>📸 Upload a full-body photo</span>
+    </label>
+  
+    <div id="result" class="hidden">
+      <h2><span id="likesNum">0</span> likes</h2>
+      <ul id="tips"></ul>
+      <button id="againBtn">Try another photo</button>
+    </div>
+  </section>
+  
 
   <!-- ===== WAITLIST (Kit) ===== -->
   <section class="signup">
